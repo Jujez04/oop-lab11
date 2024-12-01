@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
@@ -47,7 +48,7 @@ public final class MusicGroupImpl implements MusicGroup {
      */
     @Override
     public Stream<String> orderedSongNames() {
-        return this.songs.stream().map(s -> s.getSongName()).sorted();
+        return this.songs.stream().map(Song::getSongName).sorted();
     }
 
     /**
@@ -68,8 +69,8 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public Stream<String> albumInYear(final int year) {
         return this.albums.entrySet().stream()
-            .filter(a -> a.getValue() == year)
-            .map(a -> a.getKey());
+            .filter(a -> a.getValue().equals(year))
+            .map(Entry::getKey);
     }
 
     /**
@@ -80,7 +81,7 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public int countSongs(final String albumName) {
         return this.songs.stream()
-            .filter(s -> s.getAlbumName().orElse("") == albumName)
+            .filter(s -> s.getAlbumName().orElse("").equals(albumName))
             .mapToInt(s -> 1)
             .sum();
     }
@@ -103,8 +104,8 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
         return this.songs.stream()
-            .filter(s -> s.getAlbumName().orElse("") == albumName)
-            .mapToDouble((s -> s.getDuration()))
+            .filter(s -> s.getAlbumName().orElse("").equals(albumName))
+            .mapToDouble(Song::getDuration)
             .average();
     }
 
@@ -116,7 +117,7 @@ public final class MusicGroupImpl implements MusicGroup {
     public Optional<String> longestSong() {
         return Optional.of(
             this.songs.stream()
-                .max( (s1, s2) -> Double.compare(s1.getDuration(), s2.getDuration()))
+                .max((s1, s2) -> Double.compare(s1.getDuration(), s2.getDuration()))
                 .get()
                 .getSongName());
     }
@@ -127,7 +128,7 @@ public final class MusicGroupImpl implements MusicGroup {
         return this.songs.stream()
             .collect(Collectors.groupingBy(Song::getAlbumName, HashMap::new, Collectors.summingDouble(Song::getDuration)))
             .entrySet().stream()
-            .collect(Collectors.maxBy(Comparator.comparingDouble(e -> e.getValue()) ))
+            .collect(Collectors.maxBy(Comparator.comparingDouble(e -> e.getValue())))
             .get().getKey();
     }
 
