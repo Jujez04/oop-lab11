@@ -19,9 +19,9 @@ public final class ConcurrentGUI extends JFrame {
     private static final double WIDTH_PERC = 0.2;
     private static final double HEIGHT_PERC = 0.1;
     private final JLabel display = new JLabel();
-    private final JButton stop = new JButton("stop");
-    private final JButton up = new JButton("up");
-    private final JButton down = new JButton("down");
+    private final JButton stopButton = new JButton("stop");
+    private final JButton upButton = new JButton("up");
+    private final JButton downButton = new JButton("down");
 
     /**
      * Builds a new CGUI.
@@ -33,9 +33,9 @@ public final class ConcurrentGUI extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         final JPanel panel = new JPanel();
         panel.add(display);
-        panel.add(stop);
-        panel.add(up);
-        panel.add(down);
+        panel.add(stopButton);
+        panel.add(upButton);
+        panel.add(downButton);
         this.getContentPane().add(panel);
         this.setVisible(true);
         /*
@@ -48,9 +48,9 @@ public final class ConcurrentGUI extends JFrame {
         /*
          * Register a listener that stops it
          */
-        stop.addActionListener((e) -> agent.stopCounting());
-        up.addActionListener(e -> agent.setEnabled(true));
-        down.addActionListener(e -> agent.setEnabled(false));
+        stopButton.addActionListener((e) -> agent.stopCounting());
+        upButton.addActionListener(e -> agent.changeFlag(true));
+        downButton.addActionListener(e -> agent.changeFlag(false));
     }
 
     /*
@@ -101,13 +101,20 @@ public final class ConcurrentGUI extends JFrame {
          */
         public void stopCounting() {
             this.stop = true;
+            disable();
+        }
+
+        private void disable() {
+            stopButton.setEnabled(false);
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
         }
 
         /**
          * External command that sets booleand flag.
          * @param flag
          */
-        public void setEnabled(final boolean flag) {
+        private void changeFlag(final boolean flag) {
             this.flag = flag;
         }
     }
