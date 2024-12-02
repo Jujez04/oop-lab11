@@ -13,6 +13,8 @@ public class MultiThreadedSumMatrix implements SumMatrix{
 
     @Override
     public double sum(double[][] matrix) {
+
+        
         return 0.0;
     }
     
@@ -21,18 +23,36 @@ public class MultiThreadedSumMatrix implements SumMatrix{
         private final double[][] matrix;
         private final int y;
         private final int x;
+        private final int xElem;
+        private final int yElem;
         private double result;
 
-        WorkerMatrix(final double[][] matrix, final int y, final int x) {
+        WorkerMatrix(
+            final double[][] matrix, 
+            final int y, 
+            final int x,
+            final int xElem,
+            final int yElem
+            ) {
             super();
             this.matrix = matrix;
             this.x = x;
             this.y = y;
+            this.xElem = xElem;
+            this.yElem = yElem;
         }
 
         @Override
         public void run() {
+            for(int i = x; i < matrix.length && i < x + xElem; i++) {
+                for(int j = y; j < matrix[i].length && j < y + yElem; j++) {
+                    this.result += this.matrix[i][j];
+                }
+            }
+        }
 
+        private double getResult() {
+            return this.result;
         }
     }
 }
