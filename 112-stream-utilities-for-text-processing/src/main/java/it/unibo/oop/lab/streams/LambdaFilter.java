@@ -36,7 +36,7 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-    private static final String REGEX = "[^\\w']+[^\\n']";
+    private static final String REGEX = "";
 
     private enum Command {
         /**
