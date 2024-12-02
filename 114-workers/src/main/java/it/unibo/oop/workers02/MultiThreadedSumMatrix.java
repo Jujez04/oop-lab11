@@ -1,5 +1,8 @@
 package it.unibo.oop.workers02;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiThreadedSumMatrix implements SumMatrix{
 
     private final int nThreads;
@@ -13,39 +16,46 @@ public class MultiThreadedSumMatrix implements SumMatrix{
 
     @Override
     public double sum(double[][] matrix) {
+        final int rowPerThread = matrix.length > nThreads ? matrix.length / nThreads : 1;
+        final List<WorkerMatrix> workers = new ArrayList<>(nThreads);
+        for(int i = 0; i < nThreads; i++) {
+            final int start = i * rowPerThread;
+            workers.add(new WorkerMatrix(matrix, start, start + rowPerThread));
+        }
+        for(final WorkerMatrix worker : workers) {
+            worker.start();
+        }
+        double res = 0.0;
+        for(final WorkerMatrix worker : workers) {
+            try {
+                worker.join();
+                res += worker.getResult();
+            } catch (Exception e) {
+                throw new IllegalStateException();
+            }
+        }
 
-        
-        return 0.0;
+        return res;
     }
     
     private class WorkerMatrix extends Thread {
 
         private final double[][] matrix;
-        private final int y;
-        private final int x;
-        private final int xElem;
-        private final int yElem;
+        private final int startRow;
+        private final int endRow;
         private double result;
 
-        WorkerMatrix(
-            final double[][] matrix, 
-            final int y, 
-            final int x,
-            final int xElem,
-            final int yElem
-            ) {
+        WorkerMatrix(final double[][] matrix, final int startRow, final int endRow) {
             super();
             this.matrix = matrix;
-            this.x = x;
-            this.y = y;
-            this.xElem = xElem;
-            this.yElem = yElem;
+            this.startRow = startRow;
+            this.endRow = endRow;
         }
 
         @Override
         public void run() {
-            for(int i = x; i < matrix.length && i < x + xElem; i++) {
-                for(int j = y; j < matrix[i].length && j < y + yElem; j++) {
+            for(int i = startRow; i < matrix.length && i < endRow; i++) {
+                for(int j = 0; j < matrix[i].length; j++) {
                     this.result += this.matrix[i][j];
                 }
             }
