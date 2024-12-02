@@ -81,7 +81,7 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public int countSongs(final String albumName) {
         return this.songs.stream()
-            .filter(s -> s.getAlbumName().orElse("").equals(albumName))
+            .filter(s -> s.getAlbumName().filter(it -> it.equals(albumName)).isPresent())
             .mapToInt(s -> 1)
             .sum();
     }
@@ -92,7 +92,10 @@ public final class MusicGroupImpl implements MusicGroup {
      */
     @Override
     public int countSongsInNoAlbum() {
-        return this.countSongs("");
+        return this.songs.stream()
+            .filter(s -> !s.getAlbumName().isPresent())
+            .mapToInt(s -> 1)
+            .sum();
     }
 
     /**
@@ -104,7 +107,7 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
         return this.songs.stream()
-            .filter(s -> s.getAlbumName().orElse("").equals(albumName))
+            .filter(s -> s.getAlbumName().filter(it -> it.equals(albumName)).isPresent())
             .mapToDouble(Song::getDuration)
             .average();
     }
@@ -115,11 +118,9 @@ public final class MusicGroupImpl implements MusicGroup {
      */
     @Override
     public Optional<String> longestSong() {
-        return Optional.of(
-            this.songs.stream()
-                .max((s1, s2) -> Double.compare(s1.getDuration(), s2.getDuration()))
-                .get()
-                .getSongName());
+        return this.songs.stream()
+            .max((s1, s2) -> Double.compare(s1.getDuration(), s2.getDuration()))
+            .map(Song::getSongName);
     }
 
 
@@ -127,9 +128,11 @@ public final class MusicGroupImpl implements MusicGroup {
     public Optional<String> longestAlbum() {
         return this.songs.stream()
             .collect(Collectors.groupingBy(Song::getAlbumName, HashMap::new, Collectors.summingDouble(Song::getDuration)))
-            .entrySet().stream()
+            .entrySet()
+            .stream()
             .collect(Collectors.maxBy(Comparator.comparingDouble(e -> e.getValue())))
-            .get().getKey();
+            //.flatMap((Map.Entry<Optional<String>, Double> it) -> it.getKey())
+            .flatMap(Map.Entry::getKey);
     }
 
     private static final class Song {

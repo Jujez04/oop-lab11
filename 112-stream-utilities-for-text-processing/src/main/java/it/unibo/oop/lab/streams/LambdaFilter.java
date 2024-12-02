@@ -36,7 +36,7 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-    private static final String REGEX = "";
+    private static final String REGEX = ".\s";
 
     private enum Command {
         /**
@@ -50,7 +50,8 @@ public final class LambdaFilter extends JFrame {
         COUNT_LINES("Count lines", s -> String.valueOf(s.lines().count())),
         LIST_WORDS("List all words in alphabetical order", s -> Arrays.asList(s.split(REGEX)).stream()
             .sorted()
-            .collect(Collectors.joining("\n")));
+            .collect(Collectors.joining("\n"))),
+        COUNT_EACH_WORD("Count each word", s -> s.);
 
         private final String commandName;
         private final Function<String, String> fun;
