@@ -60,8 +60,6 @@ public final class AnotherConcurrentGUI extends JFrame {
         downButton.addActionListener(e -> agent.changeFlag(false));
     }
 
-    
-
     /*
      * The counter agent is implemented as a nested class. This makes it
      * invisible outside and encapsulated.
