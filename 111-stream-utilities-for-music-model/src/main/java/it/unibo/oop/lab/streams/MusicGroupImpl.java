@@ -48,7 +48,9 @@ public final class MusicGroupImpl implements MusicGroup {
      */
     @Override
     public Stream<String> orderedSongNames() {
-        return this.songs.stream().map(Song::getSongName).sorted();
+        return this.songs.stream()
+            .map(Song::getSongName)
+            .sorted();
     }
 
     /**

@@ -37,7 +37,7 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-    private static final String REGEX = "\\s|\\p{Punct}";
+    private static final String REGEX = "\\s|\\p{Punct}+";
 
     private enum Command {
         /**
@@ -47,7 +47,7 @@ public final class LambdaFilter extends JFrame {
         TO_LOWERCASE("To lowercase", String::toLowerCase),
         COUNT_CHARS("Count chars", s -> String.valueOf(s.length())),
         COUNT_LINES("Count lines", s -> String.valueOf(s.lines().count())),
-        LIST_WORDS("List all words in alphabetical order", s -> Arrays.asList(s.split(REGEX)).stream()
+        LIST_WORDS("List all words sorted in alphabetical order", s -> Arrays.asList(s.split(REGEX)).stream()
             .sorted()
             .collect(Collectors.joining("\n"))),
         COUNT_EACH_WORD("Count each word", s -> Arrays.asList(s.split(REGEX))
@@ -56,7 +56,7 @@ public final class LambdaFilter extends JFrame {
             .entrySet()
             .stream()
             .map(e -> e.getKey() + " -> " + e.getValue())
-            .collect(Collectors.joining(","))
+            .collect(Collectors.joining("\n"))
         );
 
         private final String commandName;
