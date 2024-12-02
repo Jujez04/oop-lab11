@@ -6,7 +6,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+
+import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -33,12 +36,23 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
+    private final static String REGEX = "[^\\w']+[^\\n']";
+    
 
     private enum Command {
         /**
          * Commands.
          */
-        IDENTITY("No modifications", Function.identity());
+        
+        IDENTITY("No modifications", Function.identity()),
+        TO_LOWERCASE("To lowercase", String::toLowerCase),
+        COUNT_CHARS("Count chars", s -> String.valueOf(Arrays.asList(s.split(REGEX)).stream()
+            .collect(Collectors.joining("\n"))
+            .chars().count())),
+        COUNT_LINES("Count lines", s -> String.valueOf(s.lines().count())),
+        LIST_WORDS("List all words in alphabetical order", s -> Arrays.asList(s.split(REGEX)).stream()
+            .sorted()
+            .collect(Collectors.joining("\n")));
 
         private final String commandName;
         private final Function<String, String> fun;
