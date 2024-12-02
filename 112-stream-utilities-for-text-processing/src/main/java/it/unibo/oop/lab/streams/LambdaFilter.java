@@ -36,14 +36,12 @@ import javax.swing.JTextArea;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-    private final static String REGEX = "[^\\w']+[^\\n']";
-    
+    private static final String REGEX = "[^\\w']+[^\\n']";
 
     private enum Command {
         /**
          * Commands.
          */
-        
         IDENTITY("No modifications", Function.identity()),
         TO_LOWERCASE("To lowercase", String::toLowerCase),
         COUNT_CHARS("Count chars", s -> String.valueOf(Arrays.asList(s.split(REGEX)).stream()
