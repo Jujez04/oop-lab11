@@ -25,7 +25,7 @@ public class MultiThreadedSumMatrix implements SumMatrix {
      */
     @Override
     public double sum(final double[][] matrix) {
-        final int rowPerThread = (int) Math.ceil((double) matrix.length / nThreads);
+        final int rowPerThread = matrix.length / nThreads + matrix.length % nThreads;
         final List<WorkerMatrix> workers = new ArrayList<>(nThreads);
         for (int i = 0; i < nThreads; i++) {
             final int start = i * rowPerThread;
@@ -71,7 +71,7 @@ public class MultiThreadedSumMatrix implements SumMatrix {
         @Override
         @SuppressWarnings("PMD.SystemPrintln")
         public void run() {
-            System.out.println("Working from row " + startRow + " to row" + endRow);
+            System.out.println("Working from row " + startRow + " to row " + endRow);
             for (int i = startRow; i < endRow; i++) {
                 for (int j = 0; j < matrix[i].length; j++) {
                     this.result += this.matrix[i][j];

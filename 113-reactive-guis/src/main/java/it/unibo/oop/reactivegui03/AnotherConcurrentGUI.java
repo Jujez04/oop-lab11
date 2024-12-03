@@ -100,7 +100,7 @@ public final class AnotherConcurrentGUI extends JFrame {
         }
 
         /**
-         * External command to stop counting.
+         * Command to stop counting.
          */
         public void stopCounting() {
             this.stop = true;
@@ -114,7 +114,7 @@ public final class AnotherConcurrentGUI extends JFrame {
         }
 
         /**
-         * External command that sets booleand flag.
+         * Command that sets booleand flag.
          * @param flag
          */
         private void changeFlag(final boolean flag) {
