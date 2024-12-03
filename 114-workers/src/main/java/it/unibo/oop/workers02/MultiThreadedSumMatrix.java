@@ -1,7 +1,6 @@
 package it.unibo.oop.workers02;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,10 +60,7 @@ public class MultiThreadedSumMatrix implements SumMatrix {
 
         WorkerMatrix(final double[][] matrix, final int startRow, final int endRow) {
             super();
-            this.matrix = new double[matrix.length][];
-            for (int i = 0; i < matrix.length; i++) {
-                this.matrix[i] = Arrays.copyOf(matrix[i], matrix[i].length);
-            }
+            this.matrix = matrix;
             this.startRow = startRow;
             this.endRow = endRow;
         }
