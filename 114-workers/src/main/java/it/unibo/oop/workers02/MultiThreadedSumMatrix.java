@@ -73,7 +73,9 @@ public class MultiThreadedSumMatrix implements SumMatrix {
          * Run the worker.
          */
         @Override
+        @SuppressWarnings("PMD.SystemPrintln")
         public void run() {
+            System.out.println("Working from row " + startRow + " to row" + endRow);
             for (int i = startRow; i < endRow; i++) {
                 for (int j = 0; j < matrix[i].length; j++) {
                     this.result += this.matrix[i][j];
