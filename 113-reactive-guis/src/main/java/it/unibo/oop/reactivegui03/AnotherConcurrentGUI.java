@@ -87,14 +87,7 @@ public final class AnotherConcurrentGUI extends JFrame {
                     // The EDT doesn't access `counter` anymore, it doesn't need to be volatile 
                     final var nextText = Integer.toString(this.counter);
                     SwingUtilities.invokeAndWait(() -> AnotherConcurrentGUI.this.display.setText(nextText));
-                    if(this.flag) {
-                        this.counter++;
-                    } else {
-                        this.counter--;
-                    }
-                    if(System.currentTimeMillis() - START >= 10000L) {
-                        stopCounting();
-                    }
+                    this.counter = this.counter + (this.flag ? 1: -1);
                     Thread.sleep(100);
                 } catch (InvocationTargetException | InterruptedException ex) {
                     /*
